@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuckDuckWord</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>DuckDuckWord</h1>
+        <p>Uncover the words within to grow your flock.</p>
+    </div>
+
+    <div class="score-area" id="score">Loading...</div>
+
+    <div class="pond" id="pond">
+        <div class="loading">Waddling to the pond...</div>
+    </div>
+
+    <div class="controls">
+        <div class="input-area">
+            <input type="text" id="guess-input" placeholder="Type a word..." maxlength="7" autocomplete="off" autofocus>
+            <button id="submit-btn">Submit</button>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <div class="found-words">
+        <h3>Found Words</h3>
+        <div class="found-list" id="found-list">
+            <em>No words found yet — start typing!</em>
+        </div>
+    </div>
+
+    <script src="/static/game.js"></script>
+</body>
+</html>
