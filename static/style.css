@@ -42,7 +42,7 @@ body {
     margin: 24px auto;
     width: 90%;
     max-width: 920px;
-    min-height: 280px;
+    min-height: 400px;
     background: radial-gradient(ellipse at 50% 60%, #3B6E8A 0%, #2C5A72 50%, #1F4A60 100%);
     border-radius: 50% / 28%;
     padding: 40px 30px;
@@ -51,29 +51,14 @@ body {
         inset 0 -4px 20px rgba(0,0,0,0.3),
         inset 0 2px 12px rgba(255,255,255,0.03),
         0 0 60px rgba(26, 58, 74, 0.3);
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    display: block;
     border: 1px solid rgba(255,255,255,0.04);
 }
 
-.duck-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.duck-group.left,
-.duck-group.right {
-    flex: 1;
-}
-
-.duck-group.center {
-    flex-shrink: 0;
+.pond-inner {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
 }
 
 .pond::before {
@@ -125,7 +110,22 @@ body {
 
 /* --- Parent (mama) duck --- */
 .duck.parent {
-    margin: 0 16px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: bobParent 4s ease-in-out infinite;
+}
+
+@keyframes bobParent {
+    0%, 100% { transform: translate(-50%, -50%); }
+    50% { transform: translate(-50%, calc(-50% - 5px)); }
+}
+
+.duck.baby {
+    position: absolute;
+    z-index: 1;
 }
 
 .duck.parent .duck-svg {
@@ -134,7 +134,9 @@ body {
 }
 
 .duck.parent .duck-word {
-    bottom: 32px;
+    top: 78px;
+    left: 46%;
+    transform: translate(-50%, -50%);
     font-size: 1.15rem;
     color: #3E2E00;
     letter-spacing: 3px;
@@ -148,7 +150,8 @@ body {
 }
 
 .duck.baby .duck-word {
-    bottom: 18px;
+    top: 46px;
+    transform: translate(-50%, -50%);
     font-size: 0.55rem;
     color: #5A4510;
     letter-spacing: 1.5px;
@@ -156,17 +159,22 @@ body {
 
 /* Baby duck entrance animation */
 .duck.baby {
-    animation: babyAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, bob 4s ease-in-out infinite 0.6s;
+    transform-origin: center center;
+    animation: babyAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.duck.baby .duck-svg {
+    animation: bob 4s ease-in-out infinite 0.6s;
 }
 
 @keyframes babyAppear {
     0% {
         opacity: 0;
-        transform: scale(0.4) translateY(15px);
+        filter: blur(2px);
     }
     100% {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        filter: blur(0);
     }
 }
 
@@ -315,4 +323,86 @@ body {
     padding: 60px;
     font-size: 1.1rem;
     color: #A89B85;
+}
+
+/* === Celebration === */
+.pond.celebrate {
+    animation: pondGlow 2s ease-in-out 3;
+}
+
+@keyframes pondGlow {
+    0%, 100% {
+        box-shadow:
+            0 8px 32px rgba(0,0,0,0.4),
+            inset 0 -4px 20px rgba(0,0,0,0.3),
+            inset 0 2px 12px rgba(255,255,255,0.03),
+            0 0 60px rgba(26, 58, 74, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 8px 32px rgba(0,0,0,0.4),
+            inset 0 -4px 20px rgba(0,0,0,0.3),
+            inset 0 2px 12px rgba(255,255,255,0.03),
+            0 0 80px rgba(218, 165, 32, 0.35),
+            0 0 120px rgba(218, 165, 32, 0.15);
+    }
+}
+
+/* Sparkles */
+.sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    animation: sparkleFloat 2s ease-out forwards;
+}
+
+@keyframes sparkleFloat {
+    0% {
+        opacity: 1;
+        transform: scale(0) translateY(0);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1.2) translateY(-20px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-80px);
+    }
+}
+
+/* Win banner */
+.win-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    animation: bannerAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.win-banner span {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 2rem;
+    color: #FFFFFF;
+    background: rgba(15, 50, 70, 0.85);
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.3);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    white-space: nowrap;
+}
+
+@keyframes bannerAppear {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }

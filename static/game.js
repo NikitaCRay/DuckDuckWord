@@ -32,8 +32,14 @@ async function submitGuess() {
 
     if (data.valid) {
         foundWords.push(data.word);
-        showMessage(`"${data.word.toUpperCase()}" is correct!`, "success");
-        render();
+        if (foundWords.length === totalWords) {
+            showMessage("You found them all!", "success");
+            render();
+            celebrate();
+        } else {
+            showMessage(`"${data.word.toUpperCase()}" is correct!`, "success");
+            render();
+        }
     } else {
         showMessage(data.reason, "error");
     }
@@ -189,25 +195,127 @@ function createDuckHTML(word, isParent) {
     `;
 }
 
-function render() {
-    // Pond with ducks: babies on left, mama center, babies on right
-    const pond = document.getElementById("pond");
-    const mid = Math.ceil(foundWords.length / 2);
-    const leftBabies = foundWords.slice(0, mid);
-    const rightBabies = foundWords.slice(mid);
+function seededRandom(seed) {
+    let s = seed;
+    return function() {
+        s = (s * 16807 + 0) % 2147483647;
+        return s / 2147483647;
+    };
+}
 
-    let html = '<div class="duck-group left">';
-    for (const word of leftBabies) {
-        html += createDuckHTML(word, false);
+// Assign each duck index a fixed spot (percentage of pond).
+// Positions never change — only duck size scales.
+function getFixedSpot(index) {
+    // Arrange in rings around center. Each ring holds more ducks.
+    // Ring 1: 6 ducks, Ring 2: 10, Ring 3: 14, etc.
+    const perRing = i => 6 + i * 4;
+    let ring = 0, slot = index;
+    while (slot >= perRing(ring)) {
+        slot -= perRing(ring);
+        ring++;
     }
-    html += '</div>';
-    html += '<div class="duck-group center">' + createDuckHTML(parentWord, true) + '</div>';
-    html += '<div class="duck-group right">';
-    for (const word of rightBabies) {
-        html += createDuckHTML(word, false);
+
+    const count = perRing(ring);
+    const baseAngle = (slot / count) * Math.PI * 2 - Math.PI / 2;
+    // Offset odd rings so ducks stagger
+    const angleOffset = ring % 2 === 1 ? (Math.PI / count) : 0;
+    const angle = baseAngle + angleOffset;
+
+    // Distance from center: inner rings closer, grows outward
+    // (as fraction of half-pond, starting past mama)
+    const minR = 0.38; // clear mama
+    const ringStep = 0.18;
+    const dist = minR + ring * ringStep;
+
+    // Per-duck jitter so it doesn't look mechanical
+    const rand = seededRandom((index + 1) * 7919);
+    const jitterAngle = (rand() - 0.5) * 0.3;
+    const jitterDist = (rand() - 0.5) * 0.06;
+
+    const finalAngle = angle + jitterAngle;
+    const finalDist = dist + jitterDist;
+
+    // Convert to percentage (50% = center)
+    const left = 50 + Math.cos(finalAngle) * finalDist * 100;
+    const top  = 50 + Math.sin(finalAngle) * finalDist * 100;
+
+    return { left, top };
+}
+
+function layoutBabies(count, pondW, pondH) {
+    if (count === 0) return { positions: [], scale: 1 };
+
+    const babyBaseW = 110, babyBaseH = 82;
+    const positions = [];
+    for (let i = 0; i < count; i++) {
+        positions.push(getFixedSpot(i));
     }
-    html += '</div>';
-    pond.innerHTML = html;
+
+    // Find the scale where no ducks overlap each other
+    // Convert percentage positions to pixel coords and check collisions
+    for (let scale = 1.0; scale >= 0.3; scale -= 0.05) {
+        const bw = babyBaseW * scale;
+        const bh = babyBaseH * scale;
+        const gap = 4;
+        let fits = true;
+
+        const rects = positions.map(p => ({
+            x: (p.left / 100) * pondW - bw / 2,
+            y: (p.top / 100) * pondH - bh / 2,
+        }));
+
+        // Check all pairs
+        for (let i = 0; i < rects.length && fits; i++) {
+            const a = rects[i];
+            // Out of bounds?
+            if (a.x < 0 || a.y < 0 || a.x + bw > pondW || a.y + bh > pondH) {
+                fits = false; break;
+            }
+            // Overlap mama? (elliptical)
+            const dx = (a.x + bw/2 - pondW/2) / (100 + bw/2 + 10);
+            const dy = (a.y + bh/2 - pondH/2) / (70 + bh/2 + 10);
+            if (dx*dx + dy*dy < 1) { fits = false; break; }
+
+            for (let j = i + 1; j < rects.length; j++) {
+                const b = rects[j];
+                if (!(a.x + bw + gap <= b.x || b.x + bw + gap <= a.x ||
+                      a.y + bh + gap <= b.y || b.y + bh + gap <= a.y)) {
+                    fits = false; break;
+                }
+            }
+        }
+
+        if (fits) return { positions, scale };
+    }
+
+    return { positions, scale: 0.3 };
+}
+
+function rectsOverlap(a, b, pad) {
+    return !(a.x + a.w + pad <= b.x || b.x + b.w + pad <= a.x ||
+             a.y + a.h + pad <= b.y || b.y + b.h + pad <= a.y);
+}
+
+function render() {
+    const pond = document.getElementById("pond");
+
+    // Build the pond inner container first so we can measure it
+    pond.innerHTML = '<div class="pond-inner"></div>';
+    const inner = pond.querySelector(".pond-inner");
+    const pondW = inner.offsetWidth;
+    const pondH = inner.offsetHeight;
+
+    const { positions, scale } = layoutBabies(foundWords.length, pondW, pondH);
+
+    let html = createDuckHTML(parentWord, true);
+    foundWords.forEach((word, i) => {
+        const pos = positions[i];
+        html += `<div class="duck baby" style="left:${pos.left}%;top:${pos.top}%;transform:scale(${scale})">
+            ${createDuckSVG(false)}
+            <span class="duck-word">${word.toUpperCase()}</span>
+        </div>`;
+    });
+    inner.innerHTML = html;
 
     // Score
     document.getElementById("score").innerHTML =
@@ -222,6 +330,35 @@ function render() {
     } else {
         listEl.innerHTML = "<em>No words found yet — start typing!</em>";
     }
+}
+
+function celebrate() {
+    const pond = document.querySelector(".pond");
+    pond.classList.add("celebrate");
+
+    // Sparkles burst
+    const colors = ["#E8C547", "#F5E690", "#DAA520", "#FFF5CC", "#C9A84C", "#FFFFFF"];
+    for (let i = 0; i < 60; i++) {
+        const spark = document.createElement("div");
+        spark.className = "sparkle";
+        spark.style.left = Math.random() * 100 + "%";
+        spark.style.top = Math.random() * 100 + "%";
+        spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.animationDelay = Math.random() * 1.5 + "s";
+        spark.style.animationDuration = (1.5 + Math.random() * 1.5) + "s";
+        pond.appendChild(spark);
+    }
+
+    // Banner
+    const banner = document.createElement("div");
+    banner.className = "win-banner";
+    banner.innerHTML = "<span>All ducklings found!</span>";
+    pond.appendChild(banner);
+
+    // Clean up sparkles after animation
+    setTimeout(() => {
+        pond.querySelectorAll(".sparkle").forEach(s => s.remove());
+    }, 5000);
 }
 
 // Event listeners
