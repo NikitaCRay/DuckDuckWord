@@ -63,77 +63,145 @@ function showMessage(text, type) {
 function createDuckSVG(isParent) {
     if (isParent) {
         return `<svg viewBox="0 -8 210 148" class="duck-svg" xmlns="http://www.w3.org/2000/svg">
-            <!-- Tail feathers -->
-            <path d="M25 68 Q8 45, 18 30 Q22 38, 28 50 Q14 35, 22 20 Q28 32, 32 48" fill="#B8860B" opacity="0.9"/>
-            <path d="M22 65 Q5 50, 12 35 Q18 42, 25 52" fill="#A07608" opacity="0.7"/>
-            <!-- Body -->
-            <ellipse cx="95" cy="78" rx="72" ry="45" fill="url(#parentBody)"/>
-            <!-- Wing -->
-            <ellipse cx="80" cy="75" rx="40" ry="28" fill="#B8860B" opacity="0.6" transform="rotate(-8 80 75)"/>
-            <path d="M55 72 Q70 58, 95 62 Q85 68, 75 72 Q90 64, 108 66 Q95 73, 80 76" fill="#A07608" opacity="0.3"/>
-            <!-- Neck — short and thick -->
-            <path d="M140 65 C142 52, 150 42, 148 32 C147 26, 168 26, 169 32 C167 42, 162 52, 164 65" fill="url(#parentNeck)" stroke="url(#parentNeck)" stroke-width="0.5"/>
-            <!-- Head — slightly tilted, elegant -->
-            <ellipse cx="158" cy="28" rx="24" ry="19" fill="url(#parentHead)" transform="rotate(-5 158 28)"/>
-            <!-- Forehead highlight -->
-            <ellipse cx="154" cy="22" rx="10" ry="6" fill="rgba(255,255,255,0.08)" transform="rotate(-10 154 22)"/>
-            <!-- Beak — longer, sleeker -->
-            <path d="M178 24 Q198 22, 202 27 Q198 32, 178 31 Z" fill="url(#parentBeak)"/>
-            <path d="M178 27.5 Q192 27.5, 200 27.5" fill="none" stroke="#8B5A10" stroke-width="0.7" opacity="0.6"/>
-            <!-- Nostril -->
-            <ellipse cx="188" cy="26" rx="1.3" ry="0.9" fill="#8B5A10" opacity="0.7"/>
-            <!-- Beak tip detail -->
-            <ellipse cx="200" cy="27" rx="2" ry="2.5" fill="#A86A12" opacity="0.4"/>
-            <!-- Eye — larger, expressive -->
-            <circle cx="165" cy="24" r="4.5" fill="#1A1A1A"/>
-            <circle cx="166.5" cy="22.5" r="1.8" fill="white" opacity="0.9"/>
-            <circle cx="165.5" cy="23" r="0.6" fill="white" opacity="0.4"/>
-            <!-- Eyelid -->
-            <path d="M160 22.5 Q165 20, 170 22.5" fill="none" stroke="#9A7209" stroke-width="0.8" opacity="0.5"/>
-            <!-- Crown — tiara style -->
-            <path d="M142 14 Q144 6, 148 10 Q150 2, 154 11 Q157 -2, 161 11 Q164 2, 167 10 Q170 6, 172 14" fill="url(#crownGrad)" opacity="0.9"/>
-            <path d="M142 14 Q157 10, 172 14" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
-            <!-- Crown jewels -->
-            <circle cx="148" cy="9" r="1.8" fill="#E8D68A" opacity="0.9"/>
-            <circle cx="154" cy="10" r="1.4" fill="#F0E4A8" opacity="0.8"/>
-            <circle cx="157" cy="-1" r="2.5" fill="#E8D68A"/>
-            <circle cx="157" cy="-1" r="1.2" fill="#FFF5CC" opacity="0.7"/>
-            <circle cx="161" cy="10" r="1.4" fill="#F0E4A8" opacity="0.8"/>
-            <circle cx="167" cy="9" r="1.8" fill="#E8D68A" opacity="0.9"/>
-            <!-- Chin / throat line -->
-            <path d="M148 38 Q155 42, 164 38" fill="none" stroke="#B8860B" stroke-width="0.5" opacity="0.3"/>
-            <!-- Feather detail lines on body -->
-            <path d="M50 85 Q65 78, 80 82" fill="none" stroke="#A07608" stroke-width="0.6" opacity="0.3"/>
-            <path d="M55 92 Q72 85, 90 88" fill="none" stroke="#A07608" stroke-width="0.6" opacity="0.3"/>
-            <path d="M65 98 Q80 92, 100 95" fill="none" stroke="#A07608" stroke-width="0.6" opacity="0.3"/>
-            <!-- Water ripple -->
-            <ellipse cx="95" cy="122" rx="80" ry="6" fill="rgba(255,255,255,0.08)"/>
-            <ellipse cx="95" cy="128" rx="65" ry="4" fill="rgba(255,255,255,0.04)"/>
-            <!-- Gradients -->
             <defs>
-                <linearGradient id="parentBody" x1="0" y1="0" x2="0.3" y2="1">
-                    <stop offset="0%" stop-color="#DAA520"/>
-                    <stop offset="100%" stop-color="#B8860B"/>
+                <!-- Body: warm brown, lighter breast, darker back -->
+                <radialGradient id="parentBody" cx="0.5" cy="0.4" r="0.55">
+                    <stop offset="0%" stop-color="#BFA06A"/>
+                    <stop offset="45%" stop-color="#9C7E4E"/>
+                    <stop offset="75%" stop-color="#7A6038"/>
+                    <stop offset="100%" stop-color="#5C4528"/>
+                </radialGradient>
+                <!-- Breast: lighter warm buff -->
+                <radialGradient id="parentBreast" cx="0.6" cy="0.55" r="0.5">
+                    <stop offset="0%" stop-color="#D4B882"/>
+                    <stop offset="100%" stop-color="#BFA06A"/>
+                </radialGradient>
+                <!-- Wing coverts -->
+                <linearGradient id="parentWing" x1="0" y1="0" x2="0.4" y2="1">
+                    <stop offset="0%" stop-color="#6B4E30"/>
+                    <stop offset="50%" stop-color="#503820"/>
+                    <stop offset="100%" stop-color="#3D2A18"/>
                 </linearGradient>
-                <linearGradient id="parentNeck" x1="0" y1="1" x2="0.3" y2="0">
-                    <stop offset="0%" stop-color="#C9981A"/>
-                    <stop offset="40%" stop-color="#D4A520"/>
-                    <stop offset="100%" stop-color="#DBAE30"/>
+                <!-- Speculum iridescence -->
+                <linearGradient id="speculum" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#1E3D5C"/>
+                    <stop offset="25%" stop-color="#2B5C8A"/>
+                    <stop offset="50%" stop-color="#4A3D8A"/>
+                    <stop offset="75%" stop-color="#2B5C8A"/>
+                    <stop offset="100%" stop-color="#1E3D5C"/>
                 </linearGradient>
-                <linearGradient id="parentHead" x1="0" y1="0" x2="0.8" y2="1">
-                    <stop offset="0%" stop-color="#E8C240"/>
-                    <stop offset="50%" stop-color="#DAA520"/>
-                    <stop offset="100%" stop-color="#C9981A"/>
+                <!-- Neck -->
+                <linearGradient id="parentNeck" x1="0.3" y1="1" x2="0.5" y2="0">
+                    <stop offset="0%" stop-color="#8A6D42"/>
+                    <stop offset="40%" stop-color="#9C7E4E"/>
+                    <stop offset="100%" stop-color="#B09060"/>
                 </linearGradient>
-                <linearGradient id="parentBeak" x1="0" y1="0" x2="1" y2="0.5">
-                    <stop offset="0%" stop-color="#D48E1A"/>
-                    <stop offset="100%" stop-color="#B87010"/>
+                <!-- Head -->
+                <radialGradient id="parentHead" cx="0.45" cy="0.4" r="0.55">
+                    <stop offset="0%" stop-color="#C4A270"/>
+                    <stop offset="50%" stop-color="#9C7E4E"/>
+                    <stop offset="100%" stop-color="#7A6038"/>
+                </radialGradient>
+                <!-- Beak: warm orange -->
+                <linearGradient id="parentBeak" x1="0" y1="0" x2="1" y2="0.3">
+                    <stop offset="0%" stop-color="#E8952A"/>
+                    <stop offset="40%" stop-color="#E0881E"/>
+                    <stop offset="100%" stop-color="#C87018"/>
                 </linearGradient>
-                <linearGradient id="crownGrad" x1="0" y1="1" x2="0" y2="0">
-                    <stop offset="0%" stop-color="#C9A84C"/>
-                    <stop offset="100%" stop-color="#A68932"/>
+                <!-- Tail -->
+                <linearGradient id="parentTail" x1="0.8" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5C4528"/>
+                    <stop offset="100%" stop-color="#3D2A18"/>
                 </linearGradient>
             </defs>
+
+            <!-- Tail feathers — layered, fan shape -->
+            <path d="M30 65 Q12 48, 16 32 Q20 40, 26 52" fill="url(#parentTail)" opacity="0.85"/>
+            <path d="M26 62 Q6 42, 14 25 Q18 36, 24 48" fill="#4A3520" opacity="0.7"/>
+            <path d="M33 60 Q18 50, 22 38 Q26 44, 32 52" fill="#5C4528" opacity="0.6"/>
+            <!-- Tail barring -->
+            <path d="M20 42 Q24 40, 28 44" fill="none" stroke="#C4A265" stroke-width="0.6" opacity="0.3"/>
+            <path d="M18 48 Q23 46, 28 50" fill="none" stroke="#C4A265" stroke-width="0.5" opacity="0.25"/>
+
+            <!-- Body — organic shape instead of perfect ellipse -->
+            <path d="M28 78 Q28 42, 70 38 Q110 34, 150 45 Q172 55, 168 78 Q165 108, 120 118 Q70 122, 38 105 Q28 98, 28 78 Z" fill="url(#parentBody)"/>
+            <!-- Lighter breast area -->
+            <path d="M130 70 Q165 75, 162 95 Q155 112, 120 115 Q140 100, 140 85 Q140 72, 130 70 Z" fill="url(#parentBreast)" opacity="0.6"/>
+
+            <!-- Scalloped feather rows across body -->
+            <path d="M42 72 Q48 68, 54 72 Q60 68, 66 72 Q72 68, 78 72" fill="none" stroke="#5C4020" stroke-width="0.8" opacity="0.3"/>
+            <path d="M38 80 Q45 76, 52 80 Q59 76, 66 80 Q73 76, 80 80 Q87 76, 94 80" fill="none" stroke="#5C4020" stroke-width="0.8" opacity="0.28"/>
+            <path d="M40 88 Q48 84, 56 88 Q64 84, 72 88 Q80 84, 88 88 Q96 84, 104 88" fill="none" stroke="#5C4020" stroke-width="0.7" opacity="0.25"/>
+            <path d="M45 96 Q53 92, 61 96 Q69 92, 77 96 Q85 92, 93 96 Q101 92, 109 96" fill="none" stroke="#5C4020" stroke-width="0.7" opacity="0.22"/>
+            <path d="M52 104 Q60 100, 68 104 Q76 100, 84 104 Q92 100, 100 104" fill="none" stroke="#5C4020" stroke-width="0.6" opacity="0.18"/>
+            <!-- V-shaped feather centers -->
+            <path d="M50 75 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.2"/>
+            <path d="M66 75 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.2"/>
+            <path d="M56 83 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.18"/>
+            <path d="M72 83 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.18"/>
+            <path d="M88 83 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.15"/>
+            <path d="M62 91 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.15"/>
+            <path d="M78 91 l3 -2 l3 2" fill="none" stroke="#3D2A18" stroke-width="0.5" opacity="0.15"/>
+
+            <!-- Wing — folded, with visible tertials and coverts -->
+            <path d="M45 62 Q55 50, 85 52 Q110 54, 115 68 Q112 80, 90 84 Q65 86, 48 76 Q42 72, 45 62 Z" fill="url(#parentWing)" opacity="0.75"/>
+            <!-- Greater coverts row -->
+            <path d="M50 68 Q62 62, 78 64 Q90 63, 105 66" fill="none" stroke="#3D2A18" stroke-width="0.8" opacity="0.3"/>
+            <!-- Median coverts -->
+            <path d="M52 63 Q65 58, 82 59 Q95 58, 108 62" fill="none" stroke="#3D2A18" stroke-width="0.6" opacity="0.25"/>
+            <!-- Tertial feathers -->
+            <path d="M48 72 Q60 65, 80 68 Q70 73, 55 75" fill="#5C4020" opacity="0.2"/>
+            <path d="M55 75 Q68 69, 90 71 Q78 76, 62 78" fill="#5C4020" opacity="0.15"/>
+            <!-- Speculum — iridescent blue bar with white borders -->
+            <rect x="56" y="69" width="38" height="5" rx="2" fill="url(#speculum)" opacity="0.55" transform="rotate(-6 75 71)"/>
+            <rect x="56" y="67.5" width="38" height="1.8" rx="1" fill="rgba(255,255,255,0.35)" transform="rotate(-6 75 68)"/>
+            <rect x="56" y="74.5" width="38" height="1.8" rx="1" fill="rgba(255,255,255,0.3)" transform="rotate(-6 75 76)"/>
+            <!-- Primary feather tips -->
+            <path d="M42 74 L38 78 L44 76" fill="#3D2A18" opacity="0.3"/>
+            <path d="M44 76 L40 80 L46 78" fill="#3D2A18" opacity="0.25"/>
+
+            <!-- Neck — smooth S-curve, streaked -->
+            <path d="M142 62 C144 50, 150 42, 148 30 C147 24, 166 24, 167 30 C165 42, 160 50, 162 62" fill="url(#parentNeck)"/>
+            <!-- Neck streaking -->
+            <path d="M148 55 Q152 45, 150 35" fill="none" stroke="#5C4020" stroke-width="0.6" opacity="0.2"/>
+            <path d="M156 58 Q158 48, 157 38" fill="none" stroke="#5C4020" stroke-width="0.6" opacity="0.18"/>
+            <path d="M162 56 Q163 46, 161 36" fill="none" stroke="#5C4020" stroke-width="0.5" opacity="0.15"/>
+
+            <!-- Head — rounded, warm brown -->
+            <ellipse cx="157" cy="26" rx="24" ry="18" fill="url(#parentHead)" transform="rotate(-5 157 26)"/>
+            <!-- Crown — darker cap -->
+            <path d="M138 22 Q148 12, 160 14 Q170 12, 178 20" fill="#5C4020" opacity="0.25"/>
+            <!-- Eye stripe — dark line through eye -->
+            <path d="M142 25 Q152 22, 165 24 Q172 25, 178 27" fill="none" stroke="#2E1F0A" stroke-width="2.8" opacity="0.45" stroke-linecap="round"/>
+            <!-- Supercilium — pale buff eyebrow -->
+            <path d="M142 21 Q152 16, 165 18 Q172 18, 177 21" fill="none" stroke="#D4B882" stroke-width="1.8" opacity="0.45" stroke-linecap="round"/>
+            <!-- Malar stripe — thin dark line below eye -->
+            <path d="M155 30 Q162 32, 175 30" fill="none" stroke="#3D2A18" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+            <!-- Pale cheek/throat -->
+            <path d="M145 32 Q155 38, 168 34" fill="#D4B882" opacity="0.15"/>
+
+            <!-- Beak — orange with dark saddle and nail -->
+            <path d="M177 22 Q198 20, 204 26 Q198 32, 177 30 Z" fill="url(#parentBeak)"/>
+            <!-- Dark saddle on upper mandible -->
+            <path d="M177 22 Q190 20, 200 22 Q192 25, 177 25.5" fill="#3D2A18" opacity="0.3"/>
+            <!-- Bill line -->
+            <path d="M177 26 Q192 26, 202 26" fill="none" stroke="#7A5010" stroke-width="0.7" opacity="0.45"/>
+            <!-- Nostril -->
+            <ellipse cx="188" cy="24.5" rx="1.5" ry="1" fill="#6B4010" opacity="0.5"/>
+            <!-- Nail (dark tip) -->
+            <path d="M201 23 Q206 26, 201 29" fill="#2E1F0A" opacity="0.35"/>
+
+            <!-- Eye — dark brown iris, catchlight -->
+            <circle cx="164" cy="23" r="5" fill="none" stroke="#8A6D42" stroke-width="1.2" opacity="0.3"/>
+            <circle cx="164" cy="23" r="3.8" fill="#1A0E05"/>
+            <circle cx="164" cy="23" r="2.5" fill="#3D1F0A"/>
+            <circle cx="165.5" cy="21.5" r="1.5" fill="white" opacity="0.85"/>
+            <circle cx="163" cy="22.2" r="0.5" fill="white" opacity="0.3"/>
+
+            <!-- Water line / ripple -->
+            <ellipse cx="95" cy="120" rx="82" ry="5" fill="rgba(255,255,255,0.07)"/>
+            <ellipse cx="95" cy="126" rx="68" ry="3.5" fill="rgba(255,255,255,0.04)"/>
+            <ellipse cx="95" cy="130" rx="55" ry="2.5" fill="rgba(255,255,255,0.02)"/>
         </svg>`;
     } else {
         return `<svg viewBox="0 0 120 90" class="duck-svg" xmlns="http://www.w3.org/2000/svg">

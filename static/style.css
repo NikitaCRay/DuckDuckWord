@@ -138,9 +138,9 @@ body {
     left: 46%;
     transform: translate(-50%, -50%);
     font-size: 1.15rem;
-    color: #3E2E00;
+    color: #F0E6D0;
     letter-spacing: 3px;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.15);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* --- Baby duck --- */
@@ -157,14 +157,10 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* Baby duck entrance animation */
+/* Baby duck entrance and bob animation */
 .duck.baby {
     transform-origin: center center;
-    animation: babyAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.duck.baby .duck-svg {
-    animation: bob 4s ease-in-out infinite 0.6s;
+    animation: babyAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, bob 4s ease-in-out infinite 0.6s;
 }
 
 @keyframes babyAppear {
