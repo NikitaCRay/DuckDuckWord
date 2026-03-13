@@ -124,7 +124,6 @@ body {
 }
 
 .duck.baby {
-    position: absolute;
     z-index: 1;
 }
 
@@ -145,8 +144,8 @@ body {
 
 /* --- Baby duck --- */
 .duck.baby .duck-svg {
-    width: 110px;
-    height: 82px;
+    width: 70px;
+    height: 52px;
 }
 
 .duck.baby .duck-word {
@@ -157,21 +156,10 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* Baby duck entrance and bob animation */
+/* Baby duck bob animation */
 .duck.baby {
     transform-origin: center center;
-    animation: babyAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, bob 4s ease-in-out infinite 0.6s;
-}
-
-@keyframes babyAppear {
-    0% {
-        opacity: 0;
-        filter: blur(2px);
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0);
-    }
+    animation: bob 4s ease-in-out infinite;
 }
 
 /* Game controls */
